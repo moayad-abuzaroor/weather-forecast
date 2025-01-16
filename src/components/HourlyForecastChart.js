@@ -14,20 +14,6 @@ import { Line } from "react-chartjs-2";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const HourlyForecastChart = ({ hourlyData }) => {
-  const chartRef = useRef(null);
-  const [gradient, setGradient] = useState(null);
-
-  useEffect(() => {
-    if (chartRef.current) {
-      const ctx = chartRef.current.canvas.getContext("2d");
-
-      // Create a gradient color fill
-      const newGradient = ctx.createLinearGradient(0, 0, 0, 400);
-      newGradient.addColorStop(0, "rgba(255, 165, 0, 0.8)"); // Start color
-      newGradient.addColorStop(1, "rgba(255, 165, 0, 0)");   // End color
-      setGradient(newGradient);
-    }
-  }, []);
 
   if (!hourlyData.length) return null;
 
@@ -41,7 +27,6 @@ const HourlyForecastChart = ({ hourlyData }) => {
         label: "Temperature (°C)",
         data: temps,
         borderColor: "orange",
-        backgroundColor: gradient, // Use the gradient
         fill: true,
         tension: 0.4, // Smooth lines
         pointRadius: 5, // Larger points
@@ -105,7 +90,7 @@ const HourlyForecastChart = ({ hourlyData }) => {
 
   return (
     <div style={{ height: "300px", marginTop: "20px" }}>
-      <Line ref={chartRef} data={data} options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 };
