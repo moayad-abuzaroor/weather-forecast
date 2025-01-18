@@ -1,3 +1,8 @@
+# run app
+* npm
+* npm install
+* npm start : to start in localhost
+
 # libraries used
 * react, react-dom:
 
