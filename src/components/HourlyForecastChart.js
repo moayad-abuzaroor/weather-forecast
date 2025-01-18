@@ -13,18 +13,20 @@ import { Line } from "react-chartjs-2";
 // Register the required modules
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const HourlyForecastChart = ({ hourlyData }) => {
+const HourlyForecastChart = ({ hourlyData, units }) => {
 
   if (!hourlyData.length) return null;
 
   const labels = hourlyData.map((hour) => hour.time);
   const temps = hourlyData.map((hour) => hour.temp);
+  const unitsSymbol = units === "metric" ? "°C" : "°F";
+
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Temperature (°C)",
+        label: `Temperature (${unitsSymbol})`,
         data: temps,
         borderColor: "orange",
         fill: true,
@@ -70,7 +72,7 @@ const HourlyForecastChart = ({ hourlyData }) => {
       y: {
         title: {
           display: true,
-          text: "Temperature (°C)",
+          text: `Temperature (${unitsSymbol})`,
           color: "orange",
           font: {
             size: 14,

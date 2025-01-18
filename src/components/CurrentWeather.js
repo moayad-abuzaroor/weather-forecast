@@ -1,11 +1,13 @@
 import React from "react";
 
-const CurrentWeather = ({ weather }) => {
+const CurrentWeather = ({ weather, units }) => {
   if (!weather) return null;
 
   const { name, main, weather: weatherInfo } = weather;
   const iconUrl = `http://openweathermap.org/img/wn/${weatherInfo[0].icon}@2x.png`;
   const description = weatherInfo[0].description;
+  const unitsSymbol = units === "metric" ? "°C" : "°F";
+
 
   return (
     <div
@@ -19,7 +21,7 @@ const CurrentWeather = ({ weather }) => {
       <div className="card-body text-white">
         <h2 style={{ fontSize: "2rem", fontWeight: "bold" }}>{name}</h2>
         <h1 style={{ fontSize: "3.5rem", fontWeight: "700" }}>
-          {main.temp.toFixed(1)}°C
+          {main.temp.toFixed(1)}{unitsSymbol}
         </h1>
         <div className="my-3">
           <img

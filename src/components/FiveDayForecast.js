@@ -1,8 +1,8 @@
 import React from "react";
 
-const FiveDayForecast = ({ forecast, onDaySelect, selectedDay }) => {
+const FiveDayForecast = ({ forecast, onDaySelect, selectedDay, units }) => {
     if (!forecast.length) return null;
-
+    const unitsSymbol = units === "metric" ? "°C" : "°F";
     return (
         <div
             className="d-flex overflow-auto mt-4 justify-content-sm-start justify-content-lg-center align-items-center p-4"
@@ -30,8 +30,8 @@ const FiveDayForecast = ({ forecast, onDaySelect, selectedDay }) => {
                             style={{ width: "50px", height: "50px", objectFit: "contain" }}
                         />                        
                         <div style={{ display: "flex", justifyContent: "center", flexDirection: "column" }}>
-                            <div><strong style={{ color: "orange" }}>{day.max.toFixed(1)}°C</strong></div>
-                            <div>{day.min.toFixed(1)}°C</div>
+                            <div><strong style={{ color: "orange" }}>{day.max.toFixed(1)}{unitsSymbol}</strong></div>
+                            <div>{day.min.toFixed(1)}{unitsSymbol}</div>
                         </div>
                     </div>
                 </div>

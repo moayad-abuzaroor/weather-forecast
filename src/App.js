@@ -11,6 +11,8 @@ const App = () => {
   const [hourlyData, setHourlyData] = useState([]);
   const [error, setError] = useState(null);
   const [selectedDay, setSelectedDay] = useState(0);
+  const [unit, setUnit] = useState("metric");
+  const [lastSearch, setLastSearch] = useState(null); // Tracks the last searched city or location
 
   const API_KEY = "2620f4025518c9b33e2a759b1882da8c";
 
@@ -31,18 +33,24 @@ const App = () => {
     }
   };
 
+  // Function to toggle units
+  const toggleUnit = () => {
+    setUnit((prevUnit) => (prevUnit === "metric" ? "imperial" : "metric"));
+  };
+
   // Fetch weather data based on latitude and longitude
   const handleLocationSearch = async (lat, lon) => {
     try {
       setError(null);
+      setLastSearch({ type: "location", lat, lon }); // Store the coordinates as the last search
 
       const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`
       );
       if (!weatherResponse.ok) throw new Error("Error fetching weather data");
 
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`
       );
       if (!forecastResponse.ok) throw new Error("Error fetching forecast data");
 
@@ -99,13 +107,15 @@ const App = () => {
   const handleSearch = async (city) => {
     try {
       setError(null);
+      setLastSearch({ type: "city", city }); // Store the city name as the last search
+
       const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=${API_KEY}`
       );
       if (!weatherResponse.ok) throw new Error("City not found");
 
       const forecastResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=${unit}&appid=${API_KEY}`
       );
       if (!forecastResponse.ok) throw new Error("Error fetching forecast data");
 
@@ -168,20 +178,45 @@ const App = () => {
     getLocation(); // Call getLocation on component mount to get user's location
   }, []);
 
+  useEffect(() => {
+    if (lastSearch) {
+      if (lastSearch.type === "city") {
+        handleSearch(lastSearch.city); // Refetch data for the last searched city
+      } else if (lastSearch.type === "location") {
+        handleLocationSearch(lastSearch.lat, lastSearch.lon); // Refetch data for the last searched location
+      }
+    }
+  }, [unit]);
+
   return (
     <div>
       <Navbar />
       <div className="container">
         <SearchForm onSearch={handleSearch} />
         {error && <div className="alert alert-danger mt-3">{error}</div>}
-        <CurrentWeather weather={weather} />
+
+        <div className="form-check form-switch mt-4">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="unitToggle"
+            checked={unit === "imperial"}
+            onChange={toggleUnit}
+          />
+          <label className="form-check-label" htmlFor="unitToggle">
+            {unit === "metric" ? "°C" : "°F"}
+          </label>
+        </div>
+
+        <CurrentWeather weather={weather} units={unit} />
 
         <FiveDayForecast
           forecast={forecast}
           onDaySelect={handleDaySelect}
           selectedDay={selectedDay}
+          units={unit}
         />
-        <HourlyForecastChart hourlyData={hourlyData} />
+        <HourlyForecastChart hourlyData={hourlyData} units={unit} />
       </div>
     </div>
   );
