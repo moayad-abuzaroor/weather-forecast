@@ -1,3 +1,23 @@
+# run app
+* npm
+* npm install
+* npm start : to start in localhost
+
+# libraries used
+* react, react-dom:
+
+  React: The core library for building user interfaces. React allows you to create reusable components, manage state, and             build dynamic UIs.
+  
+  React DOM: Used for rendering React components to the DOM in web-based projects. React DOM bridges React with the      browser, ensuring your app can display content properly.
+
+* bootstrap: styling the UI elements such as buttons, forms, cards, and grids.
+
+* chart.js: powerful and flexible JavaScript library for creating various types of charts (e.g., line, bar, pie), used for visualizing hourly or daily weather data in a chart format.
+
+* react-chartjs-2: React wrapper for Chart.js, making it easier to integrate charts into your React components, display weather data as charts.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
